@@ -216,3 +216,66 @@ Br belge içindeki metin verisi üzerinde analiz ve eşleşme yapar. Bu sorgular
 }``
 
 ![image](https://github.com/user-attachments/assets/98440e85-2ad2-405d-80cb-c89053ee18ee)
+
+**Match Phrase Query**: Bir alan içinde tam olarak belirttiğiniz kelime öbeğini aramanızı sağlar.
+
+``POST /kibana_sample_data_ecommerce/_search
+{
+  "query": {
+    "match_phrase": {
+      "customer_full_name": "Eddie" // Aramak istediğiniz kelime öbeği
+    }
+  }
+}``
+
+![image](https://github.com/user-attachments/assets/f97912fa-0ce1-4112-8b0a-2701798e6340)
+
+**Compound Query**:, Birden fazla sorguyu bir araya getirerek daha karmaşık ve esnek arama işlemleri yapmanıza olanak tanır. Compound (bileşik) sorgular, birden fazla alt sorguyu birleştirerek, bu alt sorguların mantıksal bir kombinasyonunu oluşturur. Bu tür sorgular, farklı arama kriterlerini birleştirerek daha hassas ve anlamlı arama sonuçları elde etmeyi sağlar.
+
+**must** içindeki şartı mutlaka sağlayan verileri getirir, skor değerine de katkı sağlar
+
+**filter**  eşleşmek zorunda, skor değerine katkı sağlamaz
+
+**should**  or gibi davranır, eşleşen dokümanda gözükebilir fakat zorunlu değildir, skora katkı sağlar
+
+**must_not** olmasını istemediğimiz kayıtlar getiriyoruz
+
+``POST /kibana_sample_data_ecommerce/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "day_of_week": "Monday" // İlk sorgu terimi
+          }
+        }
+      ],
+      "should": [
+        {
+          "match": {
+            "day_of_week": "Sunday" // İkinci sorgu terimi
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "term": {
+            "customer_gender": "FEMALE" // Hariç tutulacak terim
+          }
+        }
+      ],
+      "filter": [
+        {
+          "range": {
+            "products.created_on": {
+              "gte": "2010-01-01", // Tarih aralığı filtresi (başlangıç tarihi)
+              "lt": "2025-01-01"   // Tarih aralığı filtresi (bitiş tarihi)
+            }
+          }
+        }
+      ]
+    }
+  }
+}``
+
