@@ -1,7 +1,9 @@
 ﻿using Elastic.Clients.Elasticsearch;
+using Elastic.Clients.Elasticsearch.Eql;
 using Elastic.Transport;
 using ElasticSearch.Api.Models;
 using Elastic.Clients.Elasticsearch.QueryDsl;
+using Elastic.Clients.Elasticsearch.Core.Search;
 
 namespace ElasticSearch.Api.Services
 {
@@ -26,7 +28,7 @@ namespace ElasticSearch.Api.Services
             return entityObject;
         }
 
-        public async Task<object?> MatchAllQueryAsync<T>(string indexName) where T : IEntity
+        public async Task<IEnumerable<T>?> MatchAllQueryAsync<T>(string indexName) where T : IEntity
         {
             var matchAllQuery = new MatchAllQuery();
             var response = await _client.SearchAsync<T>(s => s
@@ -46,7 +48,7 @@ namespace ElasticSearch.Api.Services
             ).ToList();
         }
 
-        public async Task<object?> MatchAllWithPaginationQueryAsync<T>(string indexName, int pageSize, int pageNumber, string sortField, bool ascending) where T : IEntity
+        public async Task<IEnumerable<T>?> MatchAllWithPaginationQueryAsync<T>(string indexName, int pageSize, int pageNumber, string sortField, bool ascending) where T : IEntity
         {
             var matchAllQuery = new MatchAllQuery();
             var response = await _client.SearchAsync<T>(s => s
@@ -63,13 +65,7 @@ namespace ElasticSearch.Api.Services
             );
 
             if (response is not { IsValidResponse: true }) return null;
-            return response.Hits.Where(y => y is { Source: not null, Id: not null }).Select(x =>
-                {
-                    var responseItem = x.Source;
-                    responseItem.Id = x.Id;
-                    return responseItem;
-                }
-            ).ToList();
+            return response.Hits.ToResponseItem();
         }
 
         public async Task<object?> GetDocumentByIdAsync<T>(string id, string indexName) where T : IEntity
@@ -99,7 +95,7 @@ namespace ElasticSearch.Api.Services
             return true;
         }
 
-        public async Task<object?> TermQueryAsync<T>(string indexName, string fieldName, string value, bool caseInsensitive) where T : IEntity
+        public async Task<IEnumerable<T>?> TermQueryAsync<T>(string indexName, string fieldName, string value, bool caseInsensitive) where T : IEntity
         {
             var response = await _client.SearchAsync<T>(s => s
                 .Index(indexName)
@@ -113,16 +109,10 @@ namespace ElasticSearch.Api.Services
             );
 
             if (response is not { IsValidResponse: true }) return null;
-            return response.Hits.Where(y => y is { Source: not null, Id: not null }).Select(x =>
-                {
-                    var responseItem = x.Source;
-                    responseItem.Id = x.Id;
-                    return responseItem;
-                }
-            ).ToList();
+            return response.Hits.ToResponseItem();
         }
 
-        public async Task<object?> TermsQueryAsync<T>(string indexName, string fieldName, string[] values) where T : IEntity
+        public async Task<IEnumerable<T>?> TermsQueryAsync<T>(string indexName, string fieldName, string[] values) where T : IEntity
         {
             List<FieldValue> terms = new();
             values.ToList().ForEach(x => terms.Add(x));
@@ -138,16 +128,10 @@ namespace ElasticSearch.Api.Services
             );
 
             if (response is not { IsValidResponse: true }) return null;
-            return response.Hits.Where(y => y is { Source: not null, Id: not null }).Select(x =>
-                {
-                    var responseItem = x.Source;
-                    responseItem.Id = x.Id;
-                    return responseItem;
-                }
-            ).ToList();
+            return response.Hits.ToResponseItem();
         }
 
-        public async Task<object?> PrefixQueryAsync<T>(string indexName, string fieldName, string prefix) where T : IEntity
+        public async Task<IEnumerable<T>?> PrefixQueryAsync<T>(string indexName, string fieldName, string prefix) where T : IEntity
         {
             var response = await _client.SearchAsync<T>(s => s
                 .Index(indexName)
@@ -160,16 +144,10 @@ namespace ElasticSearch.Api.Services
             );
 
             if (response is not { IsValidResponse: true }) return null;
-            return response.Hits.Where(y => y is { Source: not null, Id: not null }).Select(x =>
-                {
-                    var responseItem = x.Source;
-                    responseItem.Id = x.Id;
-                    return responseItem;
-                }
-            ).ToList();
+            return response.Hits.ToResponseItem();
         }
 
-        public async Task<object?> NumberRangeQueryAsync<T>(string indexName, string fieldName, double? from, double? to) where T : IEntity
+        public async Task<IEnumerable<T>?> NumberRangeQueryAsync<T>(string indexName, string fieldName, double? from, double? to) where T : IEntity
         {
             var response = await _client.SearchAsync<T>(s => s
                 .Index(indexName)
@@ -185,16 +163,10 @@ namespace ElasticSearch.Api.Services
             );
 
             if (response is not { IsValidResponse: true }) return null;
-            return response.Hits.Where(y => y is { Source: not null, Id: not null }).Select(x =>
-                {
-                    var responseItem = x.Source;
-                    responseItem.Id = x.Id;
-                    return responseItem;
-                }
-            ).ToList();
+            return response.Hits.ToResponseItem();
         }
 
-        public async Task<object?> DateRangeQueryAsync<T>(string indexName, string fieldName, DateTime? from, DateTime? to) where T : IEntity
+        public async Task<IEnumerable<T>?> DateRangeQueryAsync<T>(string indexName, string fieldName, DateTime? from, DateTime? to) where T : IEntity
         {
             var response = await _client.SearchAsync<T>(s => s
                 .Index(indexName)
@@ -210,16 +182,10 @@ namespace ElasticSearch.Api.Services
             );
 
             if (response is not { IsValidResponse: true }) return null;
-            return response.Hits.Where(y => y is { Source: not null, Id: not null }).Select(x =>
-                {
-                    var responseItem = x.Source;
-                    responseItem.Id = x.Id;
-                    return responseItem;
-                }
-            ).ToList();
+            return response.Hits.ToResponseItem();
         }
 
-        public async Task<object?> WildcardQueryAsync<T>(string indexName, string fieldName, string wildcardPattern) where T : IEntity
+        public async Task<IEnumerable<T>?> WildcardQueryAsync<T>(string indexName, string fieldName, string wildcardPattern) where T : IEntity
         {
             var response = await _client.SearchAsync<T>(s => s
                 .Index(indexName)
@@ -232,13 +198,7 @@ namespace ElasticSearch.Api.Services
             );
 
             if (response is not { IsValidResponse: true }) return null;
-            return response.Hits.Where(y => y is { Source: not null, Id: not null }).Select(x =>
-                {
-                    var responseItem = x.Source;
-                    responseItem.Id = x.Id;
-                    return responseItem;
-                }
-            ).ToList();
+            return response.Hits.ToResponseItem();
         }
 
         public async Task<IEnumerable<T>?> FuzzyQueryAsync<T>(string indexName, string fieldName, string value, int? fuzziness) where T : IEntity
@@ -255,16 +215,10 @@ namespace ElasticSearch.Api.Services
             );
 
             if (response is not { IsValidResponse: true }) return null;
-            return response.Hits.Where(y => y is { Source: not null, Id: not null }).Select(x =>
-                {
-                    var responseItem = x.Source;
-                    responseItem.Id = x.Id;
-                    return responseItem;
-                }
-            ).ToList();
+            return response.Hits.ToResponseItem();
         }
 
-        public async Task<object?> MatchQueryAsync<T>(string indexName, string fieldName, string value) where T : IEntity
+        public async Task<IEnumerable<T>?> MatchQueryAsync<T>(string indexName, string fieldName, string value) where T : IEntity
         {
             var response = await _client.SearchAsync<T>(s => s
                 .Index(indexName)
@@ -277,13 +231,7 @@ namespace ElasticSearch.Api.Services
             );
 
             if (response is not { IsValidResponse: true }) return null;
-            return response.Hits.Where(y => y is { Source: not null, Id: not null }).Select(x =>
-                {
-                    var responseItem = x.Source;
-                    responseItem.Id = x.Id;
-                    return responseItem;
-                }
-            ).ToList();
+            return response.Hits.ToResponseItem();
         }
 
         public async Task<IEnumerable<T>?> MatchBoolPrefixQueryAsync<T>(string indexName, string fieldName, string query) where T : IEntity
@@ -299,13 +247,7 @@ namespace ElasticSearch.Api.Services
             );
 
             if (response is not { IsValidResponse: true }) return null;
-            return response.Hits.Where(y => y is { Source: not null, Id: not null }).Select(x =>
-                {
-                    var responseItem = x.Source;
-                    responseItem.Id = x.Id;
-                    return responseItem;
-                }
-            ).ToList();
+            return response.Hits.ToResponseItem();
         }
         public async Task<IEnumerable<T>?> MatchPhraseQueryAsync<T>(string indexName, string fieldName, string phrase) where T : IEntity
         {
@@ -320,13 +262,7 @@ namespace ElasticSearch.Api.Services
             );
 
             if (response is not { IsValidResponse: true }) return null;
-            return response.Hits.Where(y => y is { Source: not null, Id: not null }).Select(x =>
-                {
-                    var responseItem = x.Source;
-                    responseItem.Id = x.Id;
-                    return responseItem;
-                }
-            ).ToList();
+            return response.Hits.ToResponseItem();
         }
 
         public async Task<IEnumerable<T>?> CompoundQueryAsync<T>(string indexName,string mustFieldName, string mustQuery, string shouldFieldName, string shouldQuery, string mustNotFieldName, string mustNotValue,string filterFieldName, string filterFrom, string filterTo) where T : IEntity
@@ -367,13 +303,7 @@ namespace ElasticSearch.Api.Services
             );
 
             if (response is not { IsValidResponse: true }) return null;
-            return response.Hits.Where(y => y is { Source: not null, Id: not null }).Select(x =>
-                {
-                    var responseItem = x.Source;
-                    responseItem.Id = x.Id;
-                    return responseItem;
-                }
-            ).ToList();
+            return response.Hits.ToResponseItem();
         }
         public async Task<IEnumerable<T>?> MultiMatchQueryAsync<T>(string indexName, string[] fields, string query) where T : IEntity
         {
@@ -388,13 +318,7 @@ namespace ElasticSearch.Api.Services
             );
 
             if (response is not { IsValidResponse: true }) return null;
-            return response.Hits.Where(y => y is { Source: not null, Id: not null }).Select(x =>
-                {
-                    var responseItem = x.Source;
-                    responseItem.Id = x.Id;
-                    return responseItem;
-                }
-            ).ToList();
+            return response.Hits.ToResponseItem();
         }
     }
 }
