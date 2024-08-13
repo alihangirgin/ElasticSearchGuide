@@ -67,7 +67,7 @@ Aşağıdaki sekmeden Sample data eklenebilir. Bu solutionda "kibana_sample_data
 
 Belgelerde belirli bir terimin tam olarak eşleşmesini arar. Bu sorgular, metin içeriğini değiştirmeden tam olarak aranan terimle eşleşen belgeleri bulur. Genellikle anahtar kelimeler ve belirli değerler ile çalışırken kullanılır. Genellikle **keyword** fieldlar ile Kullanılır. Genellikle küçük/büyük harf farklılıklarına veya boşluklara duyarsızdır.
 
-**Term Query**: Elasticsearch'te belirli bir terimin tam olarak eşleştiği belgeleri bulmak için kullanılan bir sorgu türüdür. Bu sorgu, bir alanın belirli bir değere tam olarak eşleşip eşleşmediğini kontrol eder. Genellikle anahtar kelime (keyword) ve diğer tam değerli alanlarda kullanılır.
+**Term Query**: Elasticsearch'te belirli bir terimin tam olarak eşleştiği belgeleri bulmak için kullanılan bir sorgu türüdür. Bu sorgu, bir alanın belirli bir değere tam olarak eşleşip eşleşmediğini kontrol eder.
 
 ``POST /kibana_sample_data_ecommerce/_search
 {
@@ -78,4 +78,106 @@ Belgelerde belirli bir terimin tam olarak eşleşmesini arar. Bu sorgular, metin
   }
 }``
 
+![image](https://github.com/user-attachments/assets/6fce056f-2cd2-4e5a-9542-7f0728c62284)
+
+
+**Prefix Query**: Bir alanın belirli bir ön ek ile başlayan terimlere sahip belgeleri bulmak için kullanılan bir sorgu türüdür. 
+
+``POST /kibana_sample_data_ecommerce/_search
+{
+  "query": {
+    "prefix": {
+      "customer_full_name.keyword": {
+        "value": "Son"
+      }
+    }
+  }
+}``
+
+![image](https://github.com/user-attachments/assets/cd23e7d1-8f0c-4dcc-b434-d5eecfc463f6)
+
+
+**Range Query**: Bir alanın belirli bir aralık içindeki değerleri içeren belgeleri bulmak için kullanılan bir sorgu türüdür. 
+
+``POST /kibana_sample_data_ecommerce/_search
+{
+  "query": {
+    "range": {
+      "taxful_total_price": {
+        "gte": 40,
+        "lte": 50
+      }
+    }
+  }
+}``
+
+![image](https://github.com/user-attachments/assets/48d3b7e5-ac8e-4a59-8fb5-551265d0f266)
+
+![image](https://github.com/user-attachments/assets/c16c08c9-24c8-4ff8-8cba-d981eab496ee)
+
+
+**Match All Query**: Tüm belgeleri eşleştiren bir sorgu türüdür. Bu sorgu, indeks içindeki tüm belgeleri döndürür.
+
+``POST /kibana_sample_data_ecommerce/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}``
+
+![image](https://github.com/user-attachments/assets/c9d275e8-9ce8-4ca1-959b-2013b09730dc)
+
+**Pagination**:
+
+``GET /my_index/_search
+{
+  "query": {
+    "match_all": {}
+  },
+  "from": 10,
+  "size": 10,
+  "sort": [
+    {
+      "publish_date": {
+        "order": "desc"
+      }
+    }
+  ]
+}
+}``
+
+![image](https://github.com/user-attachments/assets/760d567f-597f-409b-9ea3-d521c840cc59)
+
+**Wildcard Query**:, Elasticsearch'te belirli bir alanın değerlerinin wildcard karakterleri kullanarak eşleşmesini sağlar. Bu sorgu türü, belirli bir desenle eşleşen terimleri aramak için kullanılır. "*" karakteri sıfır veya daha fazla karakteri temsil ederken, "?" karakteri tek bir karakteri temsil eder.
+
+``POST /kibana_sample_data_ecommerce/_search
+{
+  "query": {
+    "wildcard": {
+      "email": {
+        "value": "eddie*z"
+      }
+    }
+  }
+}``
+
+![image](https://github.com/user-attachments/assets/df4d51cc-6734-4881-b449-0276f4d9cdd6)
+
+**Fuzzy Query**: Kullanıcıların yazım hatalarını, varyasyonları veya benzer terimleri aramalarına olanak tanır.
+
+ Fuzziness: Arama teriminin karakter bzında ne kadar "fuzzy" yani esnek olacağını belirler. Fuzziness.Auto kullanıldığında Elasticsearch, terimin uzunluğuna bağlı olarak uygun bir fuzziness değeri seçer. Ayrıca Fuzziness değeri olarak 1, 2, sayılar da belirtilebilir
+
+``POST /kibana_sample_data_ecommerce/_search
+{
+  "query": {
+    "fuzzy": {
+      "customer_full_name.keyword": {
+        "value": "Eddie Underworld",
+        "fuzziness": "2"
+      }
+    }
+  }
+}``
+
+![image](https://github.com/user-attachments/assets/81397d5d-d5b8-4faa-ac93-5830d281be38)
 
