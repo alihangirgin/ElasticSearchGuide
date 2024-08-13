@@ -39,13 +39,7 @@ namespace ElasticSearch.Api.Services
             );
 
             if (response is not { IsValidResponse: true }) return null;
-            return response.Hits.Where(y => y is { Source: not null, Id: not null }).Select(x =>
-                {
-                    var responseItem = x.Source;
-                    responseItem.Id = x.Id;
-                    return responseItem;
-                }
-            ).ToList();
+            return response.Hits.ToResponseItem();
         }
 
         public async Task<IEnumerable<T>?> MatchAllWithPaginationQueryAsync<T>(string indexName, int pageSize, int pageNumber, string sortField, bool ascending) where T : IEntity
