@@ -63,6 +63,10 @@ Aşağıdaki sekmeden Sample data eklenebilir. Bu solutionda "kibana_sample_data
 
 <h2>Implementasyon</h2>
 
+Kibana Dev Tools sorgularını yazmanızı, test etmenizi ve çalıştırmanızı sağlar.
+
+![image](https://github.com/user-attachments/assets/29375c79-5415-49c2-b8e8-5945062f980b)
+
 <h3>Term Level Queries</h3>
 
 Belgelerde belirli bir terimin tam olarak eşleşmesini arar. Bu sorgular, metin içeriğini değiştirmeden tam olarak aranan terimle eşleşen belgeleri bulur. Genellikle anahtar kelimeler ve belirli değerler ile çalışırken kullanılır. Genellikle **keyword** fieldlar ile Kullanılır. Genellikle küçük/büyük harf farklılıklarına veya boşluklara duyarsızdır.
@@ -181,3 +185,34 @@ Belgelerde belirli bir terimin tam olarak eşleşmesini arar. Bu sorgular, metin
 
 ![image](https://github.com/user-attachments/assets/81397d5d-d5b8-4faa-ac93-5830d281be38)
 
+<h3>Full Text Queries</h3>
+
+Br belge içindeki metin verisi üzerinde analiz ve eşleşme yapar. Bu sorgular, arama terimlerini daha esnek ve kapsamlı bir şekilde işlemek için metin analizi (örneğin, küçük harfe çevirme, durak kelimeleri çıkarma) tekniklerini kullanır. Text türündeki alanlarda tam metin araması yaparken kullanılır.
+
+**Match Query**: 
+
+``POST /kibana_sample_data_ecommerce/_search
+{
+  "query": {
+    "match": {
+      "customer_first_name": "Eddie"
+    }
+  }
+}``
+
+![image](https://github.com/user-attachments/assets/f67cfbec-d364-4388-b90a-8a9d89e079c0)
+
+**Match Bool Prefix Query** Hem tam metin eşleşmeleri hem de prefix aramalarını bir arada yapılebilen querydir, default hali orlayarak getirir.
+
+``POST /kibana_sample_data_ecommerce/_search
+{
+  "query": {
+    "match_bool_prefix": {
+      "products.product_name": {
+        "query": "Boots - black Winter jacket - black"
+      }
+    }
+  }
+}``
+
+![image](https://github.com/user-attachments/assets/98440e85-2ad2-405d-80cb-c89053ee18ee)
