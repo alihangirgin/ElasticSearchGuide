@@ -279,3 +279,6 @@ Br belge içindeki metin verisi üzerinde analiz ve eşleşme yapar. Bu sorgular
   }
 }``
 
+![image](https://github.com/user-attachments/assets/d3ac1d5f-98d5-4dec-bf0e-72bd80784ccc)
+
+
