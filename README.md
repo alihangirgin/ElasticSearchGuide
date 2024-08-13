@@ -73,21 +73,24 @@ Belgelerde belirli bir terimin tam olarak eşleşmesini arar. Bu sorgular, metin
 
 **Term Query**: Elasticsearch'te belirli bir terimin tam olarak eşleştiği belgeleri bulmak için kullanılan bir sorgu türüdür. Bu sorgu, bir alanın belirli bir değere tam olarak eşleşip eşleşmediğini kontrol eder.
 
-``POST /kibana_sample_data_ecommerce/_search
+<pre>
+POST /kibana_sample_data_ecommerce/_search
 {
   "query": {
     "term": {
       "customer_id": 38
     }
   }
-}``
+}
+</pre>
 
 ![image](https://github.com/user-attachments/assets/6fce056f-2cd2-4e5a-9542-7f0728c62284)
 
 
 **Prefix Query**: Bir alanın belirli bir ön ek ile başlayan terimlere sahip belgeleri bulmak için kullanılan bir sorgu türüdür. 
 
-``POST /kibana_sample_data_ecommerce/_search
+<pre>
+POST /kibana_sample_data_ecommerce/_search
 {
   "query": {
     "prefix": {
@@ -96,14 +99,16 @@ Belgelerde belirli bir terimin tam olarak eşleşmesini arar. Bu sorgular, metin
       }
     }
   }
-}``
+}
+</pre>      
 
 ![image](https://github.com/user-attachments/assets/cd23e7d1-8f0c-4dcc-b434-d5eecfc463f6)
 
 
 **Range Query**: Bir alanın belirli bir aralık içindeki değerleri içeren belgeleri bulmak için kullanılan bir sorgu türüdür. 
 
-``POST /kibana_sample_data_ecommerce/_search
+<pre>
+POST /kibana_sample_data_ecommerce/_search
 {
   "query": {
     "range": {
@@ -113,7 +118,8 @@ Belgelerde belirli bir terimin tam olarak eşleşmesini arar. Bu sorgular, metin
       }
     }
   }
-}``
+}
+</pre>
 
 ![image](https://github.com/user-attachments/assets/48d3b7e5-ac8e-4a59-8fb5-551265d0f266)
 
@@ -122,18 +128,21 @@ Belgelerde belirli bir terimin tam olarak eşleşmesini arar. Bu sorgular, metin
 
 **Match All Query**: Tüm belgeleri eşleştiren bir sorgu türüdür. Bu sorgu, indeks içindeki tüm belgeleri döndürür.
 
-``POST /kibana_sample_data_ecommerce/_search
+<pre>
+POST /kibana_sample_data_ecommerce/_search
 {
   "query": {
     "match_all": {}
   }
-}``
+}
+</pre>
 
 ![image](https://github.com/user-attachments/assets/c9d275e8-9ce8-4ca1-959b-2013b09730dc)
 
 **Pagination**:
 
-``GET /my_index/_search
+<pre>
+GET /my_index/_search
 {
   "query": {
     "match_all": {}
@@ -148,13 +157,15 @@ Belgelerde belirli bir terimin tam olarak eşleşmesini arar. Bu sorgular, metin
     }
   ]
 }
-}``
+}
+</pre>
 
 ![image](https://github.com/user-attachments/assets/760d567f-597f-409b-9ea3-d521c840cc59)
 
 **Wildcard Query**:, Elasticsearch'te belirli bir alanın değerlerinin wildcard karakterleri kullanarak eşleşmesini sağlar. Bu sorgu türü, belirli bir desenle eşleşen terimleri aramak için kullanılır. "*" karakteri sıfır veya daha fazla karakteri temsil ederken, "?" karakteri tek bir karakteri temsil eder.
 
-``POST /kibana_sample_data_ecommerce/_search
+<pre>
+POST /kibana_sample_data_ecommerce/_search
 {
   "query": {
     "wildcard": {
@@ -163,7 +174,8 @@ Belgelerde belirli bir terimin tam olarak eşleşmesini arar. Bu sorgular, metin
       }
     }
   }
-}``
+}
+</pre>
 
 ![image](https://github.com/user-attachments/assets/df4d51cc-6734-4881-b449-0276f4d9cdd6)
 
@@ -171,7 +183,8 @@ Belgelerde belirli bir terimin tam olarak eşleşmesini arar. Bu sorgular, metin
 
  Fuzziness: Arama teriminin karakter bzında ne kadar "fuzzy" yani esnek olacağını belirler. Fuzziness.Auto kullanıldığında Elasticsearch, terimin uzunluğuna bağlı olarak uygun bir fuzziness değeri seçer. Ayrıca Fuzziness değeri olarak 1, 2, sayılar da belirtilebilir
 
-``POST /kibana_sample_data_ecommerce/_search
+<pre>
+POST /kibana_sample_data_ecommerce/_search
 {
   "query": {
     "fuzzy": {
@@ -181,7 +194,8 @@ Belgelerde belirli bir terimin tam olarak eşleşmesini arar. Bu sorgular, metin
       }
     }
   }
-}``
+}
+</pre>
 
 ![image](https://github.com/user-attachments/assets/81397d5d-d5b8-4faa-ac93-5830d281be38)
 
@@ -191,20 +205,23 @@ Br belge içindeki metin verisi üzerinde analiz ve eşleşme yapar. Bu sorgular
 
 **Match Query**: 
 
-``POST /kibana_sample_data_ecommerce/_search
+<pre>
+POST /kibana_sample_data_ecommerce/_search
 {
   "query": {
     "match": {
       "customer_first_name": "Eddie"
     }
   }
-}``
+}
+</pre>
 
 ![image](https://github.com/user-attachments/assets/f67cfbec-d364-4388-b90a-8a9d89e079c0)
 
 **Match Bool Prefix Query** Hem tam metin eşleşmeleri hem de prefix aramalarını bir arada yapılebilen querydir, default hali orlayarak getirir.
 
-``POST /kibana_sample_data_ecommerce/_search
+<pre>
+POST /kibana_sample_data_ecommerce/_search
 {
   "query": {
     "match_bool_prefix": {
@@ -213,20 +230,23 @@ Br belge içindeki metin verisi üzerinde analiz ve eşleşme yapar. Bu sorgular
       }
     }
   }
-}``
+}
+</pre>
 
 ![image](https://github.com/user-attachments/assets/98440e85-2ad2-405d-80cb-c89053ee18ee)
 
 **Match Phrase Query**: Bir alan içinde tam olarak belirttiğiniz kelime öbeğini aramanızı sağlar.
 
-``POST /kibana_sample_data_ecommerce/_search
+<pre>
+POST /kibana_sample_data_ecommerce/_search
 {
   "query": {
     "match_phrase": {
       "customer_full_name": "Eddie" // Aramak istediğiniz kelime öbeği
     }
   }
-}``
+}
+</pre>
 
 ![image](https://github.com/user-attachments/assets/f97912fa-0ce1-4112-8b0a-2701798e6340)
 
@@ -240,7 +260,8 @@ Br belge içindeki metin verisi üzerinde analiz ve eşleşme yapar. Bu sorgular
 
 **must_not** olmasını istemediğimiz kayıtlar getiriyoruz
 
-``POST /kibana_sample_data_ecommerce/_search
+<pre>
+POST /kibana_sample_data_ecommerce/_search
 {
   "query": {
     "bool": {
@@ -277,7 +298,8 @@ Br belge içindeki metin verisi üzerinde analiz ve eşleşme yapar. Bu sorgular
       ]
     }
   }
-}``
+}
+</pre>
 
 ![image](https://github.com/user-attachments/assets/d3ac1d5f-98d5-4dec-bf0e-72bd80784ccc)
 
